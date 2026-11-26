@@ -1,7 +1,7 @@
 // api/chat.js  — Vercel 서버 함수 (Google AI Studio · Gemini 무료 티어용)
 // 키는 환경변수 GEMINI_API_KEY 에서 자동으로 읽어요 (별도 패키지 설치 불필요!)
 // 더 가벼운 무료 모델이 필요하면 "gemini-3.5-flash-lite" 로 바꿔 보세요
-const MODEL = "gemini-3.8-flash";
+const MODEL = "gemini-3.5-flash-lite";
 
 // 👇 '설계 시트'에서 만든 시스템 프롬프트
 const SYSTEM_PROMPT = `너는 "민지봇"이야. 디자이너 민지의 서비스를 안내하는 상담 도우미야.
