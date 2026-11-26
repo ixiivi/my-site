@@ -228,5 +228,80 @@
     <div class="wrap">© 민지 · 브랜드 디자이너</div>
   </footer>
 
+<!-- 챗봇 위젯: index.html 의 </body> 바로 위에 붙여 넣으세요 -->
+<style>
+  #chat-btn{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;border:0;background:#5b4bdb;color:#fff;font-size:26px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  #chat-box{position:fixed;right:20px;bottom:88px;width:min(340px,calc(100vw - 40px));height:440px;display:none;flex-direction:column;background:#fff;color:#222;border:1px solid #ddd;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2);font-family:sans-serif}
+  #chat-box.open{display:flex}
+  #chat-log{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+  .m{max-width:85%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .m.me{align-self:flex-end;background:#5b4bdb;color:#fff}
+  .m.bot{align-self:flex-start;background:#eee}
+  #chat-note{font-size:11px;color:#777;padding:4px 10px}
+  #chat-form{display:flex;gap:6px;padding:8px;border-top:1px solid #ddd}
+  #chat-input{flex:1;padding:8px;border:1px solid #ccc;border-radius:8px}
+</style>
+
+<button id="chat-btn" aria-label="챗봇 열기">💬</button>
+<div id="chat-box">
+  <div id="chat-log"></div>
+  <div id="chat-note">AI가 답변하며 부정확할 수 있어요. 개인정보는 입력하지 마세요.</div>
+  <form id="chat-form">
+    <input id="chat-input" placeholder="무엇이든 물어보세요" maxlength="300" autocomplete="off">
+    <button>보내기</button>
+  </form>
+</div>
+
+<script>
+  const btn = document.getElementById("chat-btn");
+  const box = document.getElementById("chat-box");
+  const log = document.getElementById("chat-log");
+  const form = document.getElementById("chat-form");
+  const input = document.getElementById("chat-input");
+  const history = []; // 지금까지의 대화
+
+  function add(text, who) {
+    const el = document.createElement("div");
+    el.className = "m " + who;
+    el.textContent = text; // 텍스트로만 출력 (안전)
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+
+  btn.onclick = () => {
+    box.classList.toggle("open");
+    if (!log.children.length) add("안녕하세요! 무엇을 도와드릴까요?", "bot");
+  };
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    add(text, "me");
+    history.push({ role: "user", content: text });
+    const waiting = add("…", "bot");
+    try {
+      const r = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+      });
+      const data = await r.json();
+      if (data.reply) {
+        waiting.textContent = data.reply;
+        history.push({ role: "assistant", content: data.reply });
+      } else {
+        waiting.textContent = data.error || "오류가 났어요.";
+        history.pop(); // 실패한 질문은 기록에서 제거
+      }
+    } catch {
+      waiting.textContent = "연결에 실패했어요. 잠시 후 다시 시도해 주세요.";
+      history.pop();
+    }
+  };
+</script>
+
 </body>
 </html>
