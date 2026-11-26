@@ -230,16 +230,19 @@
 
 <!-- 챗봇 위젯: index.html 의 </body> 바로 위에 붙여 넣으세요 -->
 <style>
-  #chat-btn{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;border:0;background:#5b4bdb;color:#fff;font-size:26px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  #chat-btn{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;border:0;background:var(--purple);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.25)}
   #chat-box{position:fixed;right:20px;bottom:88px;width:min(340px,calc(100vw - 40px));height:440px;display:none;flex-direction:column;background:#fff;color:#222;border:1px solid #ddd;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2);font-family:sans-serif}
   #chat-box.open{display:flex}
   #chat-log{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
-  .m{max-width:85%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap}
-  .m.me{align-self:flex-end;background:#5b4bdb;color:#fff}
-  .m.bot{align-self:flex-start;background:#eee}
+  .m{max-width:85%;padding:10px 14px;border-radius:22px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .m.me{align-self:flex-end;background:var(--purple);color:#fff;border-bottom-right-radius:8px}
+  .m.bot{align-self:flex-start;background:var(--purple-soft);color:var(--text);border-bottom-left-radius:8px}
   #chat-note{font-size:11px;color:#777;padding:4px 10px}
   #chat-form{display:flex;gap:6px;padding:8px;border-top:1px solid #ddd}
-  #chat-input{flex:1;padding:8px;border:1px solid #ccc;border-radius:8px}
+  #chat-input{flex:1;padding:8px 12px;border:1px solid #ddd0f0;border-radius:999px}
+  #chat-input:focus{outline:2px solid var(--purple);outline-offset:-1px}
+  #chat-form button{border:0;border-radius:999px;padding:8px 14px;background:var(--purple);color:#fff;font-weight:700;cursor:pointer}
+  #chat-form button:hover,#chat-btn:hover{background:var(--purple-dark)}
 </style>
 
 <button id="chat-btn" aria-label="챗봇 열기">💬</button>
